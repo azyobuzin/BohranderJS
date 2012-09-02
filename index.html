@@ -20,20 +20,20 @@
         margin-left: auto;
         margin-right: auto;
       }
-      #first {
+      #first > div, #gameover > div {
         display: table-cell;
         vertical-align: middle;
         width: 640px;
         height: 480px;
       }
-      #game {
+      #game, #first, #gameover {
         width: 640px;
         height: 480px;
         display: none;
         overflow: hidden;
-        position: relative;
+        position: absolute;
       }
-      #ctrl, #info {
+      #ctrl, #info, #first, #gameover {
         display: none;
       }
       .btn {
@@ -61,8 +61,8 @@
     <script src="game.js"></script>
     <script>
       var gameStart = function() {
-        $("#game,#ctrl,#info").show();
-        $("#first").hide();
+        $("#game,#ctrl,#info").fadeIn("fast");
+        $("#first,#gameover").fadeOut("fast");
         var game = new Game("#game");
         game.setOnLevelChanged(function() {
           $("#level").text(game.getLevel());
@@ -80,6 +80,9 @@
         game.setOnKeysChangeRemainingTimeChanged(function() {
           $("#ctrl_change").text(game.getKeysChangeRemainingTime());
         });
+        game.setOnGameOver(function() {
+          $("#gameover").fadeIn("fast");
+        });
         game.start();
       };
       
@@ -88,11 +91,13 @@
           var width = $("#width").val();
           var height = $("#height").val();
           
-          $("#game_container,#first,#game").css("width", width + "px")
+          $("#game_container,#first,#game,#gameover,#first>div,#gameover>div").css("width", width + "px")
             .css("height", height + "px");
         });
         
-        $("#start").click(gameStart);
+        $("#start,#retry").click(gameStart);
+        
+        $("#first").fadeIn("slow");
       });
     </script>
   </head>
@@ -107,10 +112,22 @@
     
     <div id="game_container">
       <div id="first">
-        <button id="start" class="btn">START</button>
+        <div>
+          <h2>説明</h2>
+          <p>オレンジの玉を良ければいいと思うよ！</p>
+          <p>操作方法はスタートすると表示されます。20秒ごとに変わるので注意！</p>
+          <button id="start" class="btn">START</button>
+        </div>
       </div>
       
       <div id="game"></div>
+      
+      <div id="gameover">
+        <div>
+          <h2>Game Over</h2>
+          <button id="retry" class="btn">RETRY</button>
+        </div>
+      </div>
     </div>
     
     <div id="ctrl">

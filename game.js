@@ -63,21 +63,11 @@ var Game = function(gameElm) {
     
     this.jqObj;
     
-    this.allPixels = function() {
-      return (function(obj) {
-        return Enumerable.range(obj.x, obj.width)
-          .selectMany(function(i) {
-            return Enumerable.range(obj.y, obj.height)
-              .select(function(_i) { return { "x": i, "y": _i }; });
-          });
-      })(this);
-    };
-    
     this.isBumping = function(otherUnit) {
-      return this.allPixels().any(function(p) {
-        return otherUnit.allPixels()
-          .any(function(_p) { return p.x == _p.x && p.y == _p.y; });
-      });
+      return otherUnit.x < this.x + this.width
+        && this.x < otherUnit.x + otherUnit.width
+        && otherUnit.y < this.y + this.height
+        && this.y < otherUnit.y + otherUnit.height;
     };
     
     this.apply = function() {
@@ -194,11 +184,18 @@ var Game = function(gameElm) {
       })
       .toArray();
     
-    if (flagHit && --life == 0) {
-      clearInterval(interval);
-      if (onGameOver != null)
-        onGameOver();
-      return;
+    if (flagHit) {
+      life--;
+      
+      if (onLifeChanged != null)
+        onLifeChanged();
+      
+      if (life == 0) {
+        clearInterval(interval);
+        if (onGameOver != null)
+          onGameOver();
+        return;
+      }
     }
     
     Enumerable.from(enemies).except(newArray)
