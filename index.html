@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>ぼーらんだー on JavaScript</title>
+    <style>
+      body {
+        text-align: center;
+        font-family: "メイリオ", "Meiryo", sans-serif;
+        font-size: 16px;
+      }
+      #size input {
+        width: 70px;
+      }
+      #game_container {
+        border: 1pt solid Silver;
+        background-color: White;
+        width: 640px;
+        height: 480px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      #first {
+        display: table-cell;
+        vertical-align: middle;
+        width: 640px;
+        height: 480px;
+      }
+      #game {
+        width: 640px;
+        height: 480px;
+        display: none;
+        overflow: hidden;
+        position: relative;
+      }
+      #ctrl, #info {
+        display: none;
+      }
+      .btn {
+        width: 100px;
+        height: 23px;
+        background-color: #EEE;
+        border: 1pt solid Gray;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .btn:hover {
+        background-color: #DEF;
+      }
+      .me {
+        background-color: Red;
+        position: absolute;
+      }
+      .enemy {
+        background-color: #FF9900;
+        position: absolute;
+      }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+    <script src="linq.min.js"></script>
+    <script src="game.js"></script>
+    <script>
+      var gameStart = function() {
+        $("#game,#ctrl,#info").show();
+        $("#first").hide();
+        var game = new Game("#game");
+        game.setOnLevelChanged(function() {
+          $("#level").text(game.getLevel());
+        });
+        game.setOnLifeChanged(function() {
+          $("#life").text(game.getLife());
+        });
+        game.setOnKeysChanged(function() {
+          var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+          $("#ctrl_up").text(chars.charAt(game.getUp() - 65));
+          $("#ctrl_down").text(chars.charAt(game.getDown() - 65));
+          $("#ctrl_left").text(chars.charAt(game.getLeft() - 65));
+          $("#ctrl_right").text(chars.charAt(game.getRight() - 65));
+        });
+        game.setOnKeysChangeRemainingTimeChanged(function() {
+          $("#ctrl_change").text(game.getKeysChangeRemainingTime());
+        });
+        game.start();
+      };
+      
+      $(function() {
+        $("#width,#height").change(function() {
+          var width = $("#width").val();
+          var height = $("#height").val();
+          
+          $("#game_container,#first,#game").css("width", width + "px")
+            .css("height", height + "px");
+        });
+        
+        $("#start").click(gameStart);
+      });
+    </script>
+  </head>
+  <body>
+    <h1>ぼーらんだー on JavaScript</h1>
+    <p><a href="http://rucio.o.oo7.jp/VBContribution/VBContributionTop.htm#Bohrandah">Visual Basic 中学校に上げたやつ</a>をJavaScriptでリメイクしました。</p>
+    
+    <div id="size">
+      Width:<input id="width" type="number" value="640" />,
+      Height:<input id="height" type="number" value="480" />
+    </div>
+    
+    <div id="game_container">
+      <div id="first">
+        <button id="start" class="btn">START</button>
+      </div>
+      
+      <div id="game"></div>
+    </div>
+    
+    <div id="ctrl">
+      UP:<strong id="ctrl_up"></strong>,
+      DOWN:<strong id="ctrl_down"></strong>,
+      LEFT:<strong id="ctrl_left"></strong>,
+      RIGHT:<strong id="ctrl_right"></strong>,
+      次の変更まであと<strong id="ctrl_change"></strong>秒
+    </div>
+    
+    <div id="info">
+      LEVEL:<strong id="level"></strong>,
+      LIFE:<strong id="life"></strong>
+    </div>
+    
+    <div id="debug"></div>
+  </body>
+</html>
