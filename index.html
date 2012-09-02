@@ -37,10 +37,9 @@
         display: none;
       }
       .btn {
-        width: 100px;
-        height: 23px;
+        padding: 5px 10px;
         background-color: #EEE;
-        border: 1pt solid Gray;
+        border: 1pt solid Silver;
         margin-left: auto;
         margin-right: auto;
       }
@@ -61,10 +60,11 @@
     <script src="linq.min.js"></script>
     <script src="game.js"></script>
     <script>
-      var gameStart = function() {
+      var gameStart = function(hard) {
+        $("#mode").text(hard ? "HARD" : "NORMAL");
         $("#game,#ctrl,#info").fadeIn("fast");
         $("#first,#gameover").fadeOut("fast");
-        var game = new Game("#game");
+        var game = new Game("#game", hard);
         game.setOnLevelChanged(function() {
           $("#level").text(game.getLevel());
         });
@@ -96,7 +96,8 @@
             .css("height", height + "px");
         });
         
-        $("#start,#retry").click(gameStart);
+        $("#start_normal,#retry_normal").click(function() { gameStart(false); });
+        $("#start_hard,#retry_hard").click(function() { gameStart(true); });
         
         $("#first").fadeIn("slow");
       });
@@ -117,7 +118,10 @@
           <h2>説明</h2>
           <p>オレンジの玉を避けれいいと思うよ！</p>
           <p>操作方法はスタートすると表示されます。20秒ごとに変わるので注意！</p>
-          <button id="start" class="btn">START</button>
+          <p>
+            <button id="start_normal" class="btn" title="普通レベル">START NORMAL</button>
+            <button id="start_hard" class="btn" title="玉の出現率アップ＋自分を狙ってくる">START HARD</button>
+          </p>
         </div>
       </div>
       
@@ -125,8 +129,11 @@
       
       <div id="gameover">
         <div>
-          <h2>Game Over</h2>
-          <button id="retry" class="btn">RETRY</button>
+          <h2>GAME OVER</h2>
+          <p>
+            <button id="retry_normal" class="btn">RETRY NORMAL</button>
+            <button id="retry_hard" class="btn">RETRY HARD</button>
+          </p>
         </div>
       </div>
     </div>
@@ -140,6 +147,7 @@
     </div>
     
     <div id="info">
+      MODE:<strong id="mode"></strong>,
       LEVEL:<strong id="level"></strong>,
       LIFE:<strong id="life"></strong>
     </div>

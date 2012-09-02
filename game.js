@@ -1,6 +1,6 @@
 //This file is part of BohranderJS
 
-var Game = function(gameElm) {
+var Game = function(gameElm, hard) {
   var target = $(gameElm);
   
   var level = 1;
@@ -204,11 +204,14 @@ var Game = function(gameElm) {
     
     enemies = newArray;
     
-    if (Math.floor(Math.random() * 5) == 0) {
+    if (Math.floor(Math.random() * (hard ? 4 : 5)) == 0) {
       var newEnemy = new Unit();
       newEnemy.width = 20;
       newEnemy.height = 20;
-      newEnemy.x = Math.floor(Math.random() * (target.width() - newEnemy.width));
+      if (hard)
+        newEnemy.x = Math.min(Math.max(me.x - 60, 0) + Math.floor(Math.random() * (me.width + 120)), target.width() - newEnemy.width);
+      else
+        newEnemy.x = Math.floor(Math.random() * (target.width() - newEnemy.width));
       newEnemy.y = 0;
       newEnemy.jqObj = $("<div />").addClass("enemy").appendTo(target);
       enemies.push(newEnemy);
