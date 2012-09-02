@@ -192,6 +192,7 @@ var Game = function(gameElm) {
       
       if (life == 0) {
         clearInterval(interval);
+        $("body").unbind("keydown");
         if (onGameOver != null)
           onGameOver();
         return;
