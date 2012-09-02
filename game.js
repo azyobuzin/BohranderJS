@@ -1,4 +1,6 @@
-//This file is part of BohranderJS
+// This file is part of BohranderJS
+/// <reference path="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"/>
+/// <reference path="linq-vsdoc.js"/>
 
 var Game = function(gameElm, hard) {
   var target = $(gameElm);
