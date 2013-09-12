@@ -85,6 +85,11 @@ var Game = function(gameElm, hard) {
   
   var interval = null;
   
+  var upFlag = false;
+  var downFlag = false;
+  var leftFlag = false;
+  var rightFlag = false;
+  
   this.start = function() {
     target.html("");
     me = new Unit();
@@ -96,25 +101,15 @@ var Game = function(gameElm, hard) {
     me.apply();
     
     $("body").keydown(function(e) {
-      if (up == e.which) {
-        var y = me.y - 10;
-        if (y < 0) y = 0;
-        me.y = y;
-      } else if (down == e.which) {
-        var y = me.y + 10;
-        if (y > target.height() - me.height) y = target.height() - me.height;
-        me.y = y;
-      } else if (left == e.which) {
-        var x = me.x - 10;
-        if (x < 0) x = 0;
-        me.x = x;
-      } else if (right == e.which) {
-        var x = me.x + 10;
-        if (x > target.width() - me.width) x = target.width() - me.width;
-        me.x = x;
-      }
-      
-      me.apply();
+      upFlag = up == e.which;
+      downFlag = down == e.which;
+      leftFlag = left == e.which;
+      rightFlag = right == e.which;
+    }).keyup(function(e) {
+      upFlag = up == e.which ? false : upFlag;
+      downFlag = down == e.which ? false : downFlag;
+      leftFlag = left == e.which ? false : leftFlag;
+      rightFlag = right == e.which ? false : rightFlag;
     });
     
     if (onLevelChanged != null)
@@ -151,6 +146,25 @@ var Game = function(gameElm, hard) {
   var keysChangeFrames = 0;
   
   var frame = function() {
+    if (upFlag) {
+        var y = me.y - 12;
+        if (y < 0) y = 0;
+        me.y = y;
+    } else if (downFlag) {
+        var y = me.y + 12;
+        if (y > target.height() - me.height) y = target.height() - me.height;
+        me.y = y;
+    } else if (leftFlag) {
+        var x = me.x - 12;
+        if (x < 0) x = 0;
+        me.x = x;
+    } else if (rightFlag) {
+        var x = me.x + 12;
+        if (x > target.width() - me.width) x = target.width() - me.width;
+        me.x = x;
+    }
+    me.apply();
+    
     if (++levelFrames == 60) {
       level++;
       if (onLevelChanged != null)
